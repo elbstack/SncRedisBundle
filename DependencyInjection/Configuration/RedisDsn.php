@@ -161,6 +161,7 @@ class RedisDsn
                 $password = substr($password, 2);
             }
             $this->password = $password;
+            $dsn = substr($dsn, $pos + 1);
         }
         $dsn = preg_replace_callback('/\?(weight|alias)=[^&]+.*$/', array($this, 'parseParameters'), $dsn); // parse parameters
         if (preg_match('#^(.*)/(\d+)$#', $dsn, $matches)) {
