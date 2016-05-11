@@ -155,8 +155,12 @@ class RedisDsn
         $dsn = str_replace('redis://', '', $dsn); // remove "redis://"
         if (false !== $pos = strrpos($dsn, '@')) {
             // parse password
-            $this->password = str_replace('\@', '@', substr($dsn, 0, $pos));
-            $dsn = substr($dsn, $pos + 1);
+            $password = str_replace('\@', '@', substr($dsn, 0, $pos));
+            // Try to figure out if dsn contains user
+            if (strpos($password, ':') === 1) {
+                $password = substr($password, 2);
+            }
+            $this->password = $password;
         }
         $dsn = preg_replace_callback('/\?(weight|alias)=[^&]+.*$/', array($this, 'parseParameters'), $dsn); // parse parameters
         if (preg_match('#^(.*)/(\d+)$#', $dsn, $matches)) {
